@@ -84,7 +84,7 @@ class FlattenMlp(Mlp):
     """
 
     def forward(self, *inputs, **kwargs):
-        flat_inputs = torch.cat(inputs, dim=1, device="cuda")
+        flat_inputs = torch.cat(inputs, dim=1).to(device="cuda")
         return super().forward(flat_inputs, **kwargs)
 
 
