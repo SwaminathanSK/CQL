@@ -13,6 +13,7 @@ import numpy as np
 
 import h5py
 import d4rl, gym
+import wandb
 
 def load_hdf5(dataset, replay_buffer):
     replay_buffer._observations = dataset['observations']
@@ -100,8 +101,12 @@ def experiment(variant):
         batch_rl=variant['load_buffer'],
         **variant['algorithm_kwargs']
     )
+
+    wandb.login(key = "9693e19323d20b494a26a6ee07f05881b2107bf8")
+    run = wandb.init(project="Baselines_CQL", config=variant)
+
     algorithm.to(ptu.device)
-    algorithm.train()
+    algorithm.train(run)
 
 def enable_gpus(gpu_str):
     if (gpu_str is not ""):

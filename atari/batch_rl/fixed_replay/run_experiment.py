@@ -97,7 +97,7 @@ class FixedReplayRunner(run_experiment.Runner):
       num_episodes_eval: int, number of evaluation episodes run.
       average_reward_eval: float, The average evaluation reward.
     """
-    summary = tf.Summary(value=[
+    summary = tf.Summary(value=[ 
         tf.Summary.Value(tag='Eval/NumEpisodes',
                          simple_value=num_episodes_eval),
         tf.Summary.Value(tag='Eval/AverageReturns',

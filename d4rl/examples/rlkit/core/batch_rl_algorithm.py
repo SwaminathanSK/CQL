@@ -105,7 +105,7 @@ class BatchRLAlgorithm(BaseRLAlgorithm, metaclass=abc.ABCMeta):
         return ptu.get_numpy(action).flatten()
 
 
-    def _train(self):
+    def _train(self, run):
         if self.min_num_steps_before_training > 0 and not self.batch_rl:
             init_expl_paths = self.expl_data_collector.collect_new_paths(
                 self.max_path_length,
@@ -171,7 +171,7 @@ class BatchRLAlgorithm(BaseRLAlgorithm, metaclass=abc.ABCMeta):
                 gt.stamp('training', unique=False)
                 self.training_mode(False)
 
-            self._end_epoch(epoch)
+            self._end_epoch(run, epoch)
 
             # import ipdb; ipdb.set_trace()
             ## After epoch visualize

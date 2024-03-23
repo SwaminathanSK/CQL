@@ -41,9 +41,9 @@ class BaseRLAlgorithm(object, metaclass=abc.ABCMeta):
 
         self.post_epoch_funcs = []
 
-    def train(self, start_epoch=0):
+    def train(self, run, start_epoch=0):
         self._start_epoch = start_epoch
-        self._train()
+        self._train(run)
 
     def _train(self):
         """
@@ -51,12 +51,15 @@ class BaseRLAlgorithm(object, metaclass=abc.ABCMeta):
         """
         raise NotImplementedError('_train must implemented by inherited class')
 
-    def _end_epoch(self, epoch):
+    def _end_epoch(self, run, epoch):
         # if not self.trainer.discrete:
         #     snapshot = self._get_snapshot()
         #     logger.save_itr_params(epoch, snapshot)
         #     gt.stamp('saving')
-        self._log_stats(epoch)
+        self._log_stats(epoch, run)
+        # snapshot = self._get_snapshot()
+        # run.log(snapshot)
+        
 
         self.expl_data_collector.end_epoch(epoch)
         self.eval_data_collector.end_epoch(epoch)
@@ -78,7 +81,7 @@ class BaseRLAlgorithm(object, metaclass=abc.ABCMeta):
             snapshot['replay_buffer/' + k] = v
         return snapshot
 
-    def _log_stats(self, epoch):
+    def _log_stats(self, epoch, run):
         logger.log("Epoch {} finished".format(epoch), with_timestamp=True)
 
         """
@@ -130,6 +133,8 @@ class BaseRLAlgorithm(object, metaclass=abc.ABCMeta):
             eval_util.get_generic_path_information(eval_paths),
             prefix="evaluation/",
         )
+
+        run.log(self.eval_data_collector.get_diagnostics() | eval_util.get_generic_path_information(eval_paths))
 
         """
         Misc
